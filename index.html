@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centered File Upload</title>
+    <style>
+        /* Fills the screen and centers content */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f4f7f6;
+            font-family: Arial, sans-serif;
+        }
+
+        /* The centered upload container card */
+        .upload-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 100%;
+        }
+
+        h2 {
+            margin-top: 0;
+            color: #333333;
+        }
+
+        .file-input {
+            margin: 20px 0;
+        }
+
+        .upload-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .upload-btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="upload-container">
+        <h2>Upload Your File</h2>
+        <input type="file" class="file-input" id="fileChooser">
+        <br>
+        <button class="upload-btn" onclick="alert('File selected!')">Submit</button>
+    </div>
+
+</body>
+</html>
