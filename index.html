@@ -72,6 +72,7 @@
             background-color: #0a0a0a;
             border-left: 2px solid #00ff00;
             padding: 15px;
+            max-height: 100vh;
         }
 
         .chat-header {
@@ -80,12 +81,14 @@
             margin-bottom: 10px;
             font-size: 18px;
             font-weight: bold;
+            flex-shrink: 0;
         }
 
         .login-section {
             display: flex;
             flex-direction: column;
             gap: 8px;
+            flex-shrink: 0;
         }
 
         .login-section input {
@@ -121,6 +124,7 @@
             display: none;
             flex: 1;
             flex-direction: column;
+            min-height: 0;
         }
 
         #messages {
@@ -131,12 +135,14 @@
             margin-bottom: 10px;
             background-color: #1a1a1a;
             border-radius: 4px;
+            min-height: 0;
         }
 
         .msg {
             margin-bottom: 10px;
             font-size: 12px;
             word-wrap: break-word;
+            overflow-wrap: break-word;
         }
 
         .msg .username {
@@ -147,11 +153,13 @@
         .msg .text {
             color: #88ff88;
             margin-top: 2px;
+            word-break: break-word;
         }
 
         .input-section {
             display: flex;
             gap: 5px;
+            flex-shrink: 0;
         }
 
         .input-section input {
@@ -178,6 +186,7 @@
             cursor: pointer;
             font-weight: bold;
             font-size: 12px;
+            flex-shrink: 0;
         }
 
         .send-btn:hover {
@@ -196,6 +205,7 @@
             cursor: pointer;
             font-weight: bold;
             font-size: 12px;
+            flex-shrink: 0;
         }
 
         .logout-btn:hover {
