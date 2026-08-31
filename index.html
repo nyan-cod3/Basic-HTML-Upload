@@ -255,37 +255,46 @@
         </div>
     </div>
 
-    <script>
-        const ROOM_PASSWORD = "yggsDp"; // Change this to whatever password you want
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-app.js";
+        import { getDatabase, ref, push, onChildAdded } from "https://www.gstatic.com/firebasejs/12.18.0/firebase-database.js";
+
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyAhdMGEc2HNajaY6R8bJ1N8-Nj64FNVweY",
+            authDomain: "sight-seer-chata.firebaseapp.com",
+            databaseURL: "https://sight-seer-chata-default-rtdb.firebaseio.com",
+            projectId: "sight-seer-chata",
+            storageBucket: "sight-seer-chata.firebasestorage.app",
+            messagingSenderId: "672713450974",
+            appId: "1:672713450974:web:b31d23b91941b3e4f8a94f",
+            measurementId: "G-PM2E406VB9"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        const ROOM_PASSWORD = "yggsDp";
         let currentUsername = "";
-        let messages = JSON.parse(localStorage.getItem('chatMessages')) || [];
+        let messagesCache = [];
 
         const loginSection = document.getElementById('login-section');
         const chatSection = document.getElementById('chat-section');
         const messagesDiv = document.getElementById('messages');
         const messageInput = document.getElementById('message-input');
 
-        // Load messages on page load
-        function displayMessages() {
-            messagesDiv.innerHTML = '';
-            messages.forEach(msg => {
+        // Load messages from Firebase
+        function initChat() {
+            const messagesRef = ref(db, 'messages');
+            onChildAdded(messagesRef, (snapshot) => {
+                const data = snapshot.val();
                 const msgEl = document.createElement('div');
                 msgEl.classList.add('msg');
-                msgEl.innerHTML = `<span class="username">${escapeHTML(msg.username)}:</span><div class="text">${escapeHTML(msg.text)}</div>`;
+                msgEl.innerHTML = `<span class="username">${escapeHTML(data.username)}:</span><div class="text">${escapeHTML(data.text)}</div>`;
                 messagesDiv.appendChild(msgEl);
+                messagesDiv.scrollTop = messagesDiv.scrollHeight;
             });
-            messagesDiv.scrollTop = messagesDiv.scrollHeight;
-        }
-
-        // Check if user was already logged in
-        function checkLogin() {
-            const savedUsername = localStorage.getItem('currentUsername');
-            if (savedUsername) {
-                currentUsername = savedUsername;
-                loginSection.style.display = 'none';
-                chatSection.style.display = 'flex';
-                displayMessages();
-            }
         }
 
         // Handle Login
@@ -306,24 +315,24 @@
             localStorage.setItem('currentUsername', user);
             loginSection.style.display = 'none';
             chatSection.style.display = 'flex';
-            displayMessages();
+            initChat();
         });
 
-        // Send Message
+        // Send Message to Firebase
         function sendMessage() {
             const text = messageInput.value.trim();
             if (!text) return;
 
-            const newMsg = {
+            const messagesRef = ref(db, 'messages');
+            push(messagesRef, {
                 username: currentUsername,
                 text: text,
-                timestamp: new Date().toLocaleTimeString()
-            };
-
-            messages.push(newMsg);
-            localStorage.setItem('chatMessages', JSON.stringify(messages));
+                timestamp: new Date().toISOString()
+            }).catch(error => {
+                alert("Error sending message: " + error.message);
+            });
+            
             messageInput.value = '';
-            displayMessages();
         }
 
         document.getElementById('send-btn').addEventListener('click', sendMessage);
@@ -339,6 +348,7 @@
             document.getElementById('password-input').value = '';
             loginSection.style.display = 'flex';
             chatSection.style.display = 'none';
+            messagesDiv.innerHTML = '';
         });
 
         // Escape HTML to prevent injection
@@ -352,17 +362,14 @@
             }[tag] || tag));
         }
 
-        // Check login on page load
-        checkLogin();
-
-        // Refresh messages every 500ms to see new messages from other tabs
-        setInterval(() => {
-            const updatedMessages = JSON.parse(localStorage.getItem('chatMessages')) || [];
-            if (JSON.stringify(updatedMessages) !== JSON.stringify(messages)) {
-                messages = updatedMessages;
-                displayMessages();
-            }
-        }, 500);
+        // Check if user was already logged in
+        const savedUsername = localStorage.getItem('currentUsername');
+        if (savedUsername) {
+            currentUsername = savedUsername;
+            loginSection.style.display = 'none';
+            chatSection.style.display = 'flex';
+            initChat();
+        }
     </script>
 </body>
 </html>
