@@ -5,19 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>sight-seer</title>
     <style>
-        /* Fills the screen and centers content */
-        body {
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
             height: 100vh;
             display: flex;
-            justify-content: center;
-            align-items: center;
             background-color: #0a0a0a;
             font-family: Arial, sans-serif;
         }
 
-        /* The centered upload container card */
+        /* Left side - Upload */
+        .left-section {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
         .upload-container {
             background-color: #1a1a1a;
             padding: 30px;
@@ -32,6 +40,7 @@
         h2 {
             margin-top: 0;
             color: #00ff00;
+            margin-bottom: 20px;
         }
 
         .file-input {
@@ -54,16 +63,306 @@
             background-color: #00cc00;
             box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
         }
+
+        /* Right side - Chat */
+        .right-section {
+            width: 350px;
+            display: flex;
+            flex-direction: column;
+            background-color: #0a0a0a;
+            border-left: 2px solid #00ff00;
+            padding: 15px;
+        }
+
+        .chat-header {
+            color: #00ff00;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .login-section {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .login-section input {
+            padding: 8px;
+            background-color: #1a1a1a;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .login-section input::placeholder {
+            color: #00aa00;
+        }
+
+        .login-btn {
+            background-color: #00ff00;
+            color: #000000;
+            border: none;
+            padding: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .login-btn:hover {
+            background-color: #00cc00;
+            box-shadow: 0 0 8px rgba(0, 255, 0, 0.4);
+        }
+
+        .chat-section {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+        }
+
+        #messages {
+            flex: 1;
+            overflow-y: auto;
+            border: 1px solid #00ff00;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #1a1a1a;
+            border-radius: 4px;
+        }
+
+        .msg {
+            margin-bottom: 10px;
+            font-size: 12px;
+            word-wrap: break-word;
+        }
+
+        .msg .username {
+            color: #00ff00;
+            font-weight: bold;
+        }
+
+        .msg .text {
+            color: #88ff88;
+            margin-top: 2px;
+        }
+
+        .input-section {
+            display: flex;
+            gap: 5px;
+        }
+
+        .input-section input {
+            flex: 1;
+            padding: 8px;
+            background-color: #1a1a1a;
+            color: #00ff00;
+            border: 1px solid #00ff00;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .input-section input::placeholder {
+            color: #00aa00;
+        }
+
+        .send-btn {
+            width: 50px;
+            padding: 8px;
+            background-color: #00ff00;
+            color: #000000;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .send-btn:hover {
+            background-color: #00cc00;
+            box-shadow: 0 0 8px rgba(0, 255, 0, 0.4);
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 8px;
+            margin-top: 8px;
+            background-color: #cc0000;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            font-size: 12px;
+        }
+
+        .logout-btn:hover {
+            background-color: #ff0000;
+        }
+
+        /* Scrollbar styling */
+        #messages::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #messages::-webkit-scrollbar-track {
+            background: #1a1a1a;
+        }
+
+        #messages::-webkit-scrollbar-thumb {
+            background: #00ff00;
+            border-radius: 3px;
+        }
+
+        #messages::-webkit-scrollbar-thumb:hover {
+            background: #00cc00;
+        }
     </style>
 </head>
 <body>
 
-    <div class="upload-container">
-        <h2>Upload Your File</h2>
-        <input type="file" class="file-input" id="fileChooser">
-        <br>
-        <button class="upload-btn" onclick="alert('File selected!')">spectare</button>
+    <!-- Left: Upload Section -->
+    <div class="left-section">
+        <div class="upload-container">
+            <h2>Upload Your File</h2>
+            <input type="file" class="file-input" id="fileChooser">
+            <br>
+            <button class="upload-btn" onclick="alert('File selected!')">spectare</button>
+        </div>
     </div>
 
+    <!-- Right: Chat Section -->
+    <div class="right-section">
+        <div class="chat-header">💬 Live Chat</div>
+
+        <!-- Login Section -->
+        <div id="login-section" class="login-section">
+            <input type="text" id="username-input" placeholder="Enter username...">
+            <input type="password" id="password-input" placeholder="Room password...">
+            <button class="login-btn" id="login-btn">Join Chat</button>
+        </div>
+
+        <!-- Chat Section -->
+        <div id="chat-section" class="chat-section">
+            <div id="messages"></div>
+            <div class="input-section">
+                <input type="text" id="message-input" placeholder="Type message...">
+                <button class="send-btn" id="send-btn">Send</button>
+            </div>
+            <button class="logout-btn" id="logout-btn">Leave</button>
+        </div>
+    </div>
+
+    <script>
+        const ROOM_PASSWORD = "yggsDp"; // Change this to whatever password you want
+        let currentUsername = "";
+        let messages = JSON.parse(localStorage.getItem('chatMessages')) || [];
+
+        const loginSection = document.getElementById('login-section');
+        const chatSection = document.getElementById('chat-section');
+        const messagesDiv = document.getElementById('messages');
+        const messageInput = document.getElementById('message-input');
+
+        // Load messages on page load
+        function displayMessages() {
+            messagesDiv.innerHTML = '';
+            messages.forEach(msg => {
+                const msgEl = document.createElement('div');
+                msgEl.classList.add('msg');
+                msgEl.innerHTML = `<span class="username">${escapeHTML(msg.username)}:</span><div class="text">${escapeHTML(msg.text)}</div>`;
+                messagesDiv.appendChild(msgEl);
+            });
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
+
+        // Check if user was already logged in
+        function checkLogin() {
+            const savedUsername = localStorage.getItem('currentUsername');
+            if (savedUsername) {
+                currentUsername = savedUsername;
+                loginSection.style.display = 'none';
+                chatSection.style.display = 'flex';
+                displayMessages();
+            }
+        }
+
+        // Handle Login
+        document.getElementById('login-btn').addEventListener('click', () => {
+            const user = document.getElementById('username-input').value.trim();
+            const pass = document.getElementById('password-input').value;
+
+            if (!user) {
+                alert("Please enter a username.");
+                return;
+            }
+            if (pass !== ROOM_PASSWORD) {
+                alert("Incorrect room password.");
+                return;
+            }
+
+            currentUsername = user;
+            localStorage.setItem('currentUsername', user);
+            loginSection.style.display = 'none';
+            chatSection.style.display = 'flex';
+            displayMessages();
+        });
+
+        // Send Message
+        function sendMessage() {
+            const text = messageInput.value.trim();
+            if (!text) return;
+
+            const newMsg = {
+                username: currentUsername,
+                text: text,
+                timestamp: new Date().toLocaleTimeString()
+            };
+
+            messages.push(newMsg);
+            localStorage.setItem('chatMessages', JSON.stringify(messages));
+            messageInput.value = '';
+            displayMessages();
+        }
+
+        document.getElementById('send-btn').addEventListener('click', sendMessage);
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // Logout
+        document.getElementById('logout-btn').addEventListener('click', () => {
+            currentUsername = "";
+            localStorage.removeItem('currentUsername');
+            document.getElementById('username-input').value = '';
+            document.getElementById('password-input').value = '';
+            loginSection.style.display = 'flex';
+            chatSection.style.display = 'none';
+        });
+
+        // Escape HTML to prevent injection
+        function escapeHTML(str) {
+            return str.replace(/[&<>'"]/g, tag => ({
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                "'": '&#39;',
+                '"': '&quot;'
+            }[tag] || tag));
+        }
+
+        // Check login on page load
+        checkLogin();
+
+        // Refresh messages every 500ms to see new messages from other tabs
+        setInterval(() => {
+            const updatedMessages = JSON.parse(localStorage.getItem('chatMessages')) || [];
+            if (JSON.stringify(updatedMessages) !== JSON.stringify(messages)) {
+                messages = updatedMessages;
+                displayMessages();
+            }
+        }, 500);
+    </script>
 </body>
 </html>
